@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
-#include "sistema.c"
+#include <string.h>
+
+#include "sistema.h"
 
 
 int main()
@@ -128,11 +130,17 @@ int main()
 				                    							printf("Localidade já criada.\n");
 				                    							system("pause");
 				               								 } else {
-											                    char nome_ficheiro[100];
-											                    
-											                    strcpy(nome_ficheiro, pesquisar_nome_ficheiro(listaUtilizadores, nome));
-											                    ler_ficheiro(nome_ficheiro, &grafo, &numPostes);
-											                    if (!grafo) {
+											                                                                    char nome_ficheiro[256];
+                                                
+                                                char *tempNomeFicheiro = pesquisar_nome_ficheiro(listaUtilizadores, nome);
+                                                if (tempNomeFicheiro == NULL) {
+                                                    printf("Não foi possível obter o nome do ficheiro do utilizador.\n");
+                                                    system("pause");
+                                                    break;
+                                                }
+                                                strcpy(nome_ficheiro, tempNomeFicheiro);
+                                                free(tempNomeFicheiro);
+if (!grafo) {
 											                        printf("\nFalha ao criar a localidade a partir do ficheiro.\n");
 											                       	system("pause");
 											                    }else{

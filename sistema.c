@@ -5,6 +5,25 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <limits.h> 
+
+static void montar_caminho_ficheiro(const char *nomeFicheiro, char *dest, size_t size) {
+    char base[256];
+
+    if (strchr(nomeFicheiro, '/') || strchr(nomeFicheiro, '\\')) {
+        strncpy(base, nomeFicheiro, sizeof(base));
+        base[sizeof(base) - 1] = '\0';
+    } else {
+        snprintf(base, sizeof(base), "ficheiro/%s", nomeFicheiro);
+    }
+
+    if (strstr(base, ".txt") == NULL) {
+        snprintf(dest, size, "%s.txt", base);
+    } else {
+        strncpy(dest, base, size);
+        dest[size - 1] = '\0';
+    }
+}
 
 //---------------------------- Funções para a Gestão de Utilizadores -----------------------------------
 
@@ -35,13 +54,9 @@ int autenticar_utilizador(Utilizador *listaUtilizadores, const char *nome, const
         if (strcmp(atual->nome, nome) == 0 && strcmp(atual->senha, senha) == 0) {
             printf("Utilizador '%s' autenticado com sucesso.\n", nome);
 
-            // Adiciona a extensão ".txt" ao nome do arquivo se ainda não estiver presente
-            char nomeFicheiroCompleto[50]; 
-            if (strstr(atual->nomeFicheiro, ".txt") == NULL) {
-                sprintf(nomeFicheiroCompleto, "%s.txt", atual->nomeFicheiro);
-            } else {
-                strcpy(nomeFicheiroCompleto, atual->nomeFicheiro);
-            }
+            // Monta o caminho completo para o ficheiro dentro de pasta 'ficheiro' e com extensão '.txt'
+            char nomeFicheiroCompleto[256];
+            montar_caminho_ficheiro(atual->nomeFicheiro, nomeFicheiroCompleto, sizeof(nomeFicheiroCompleto));
 
             // Verifica se o arquivo associado ao utilizador existe
             FILE *ficheiro = fopen(nomeFicheiroCompleto, "r");
@@ -102,24 +117,19 @@ void limpar_buffer() {
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-const char* pesquisar_nome_ficheiro(Utilizador *listaUtilizadores, const char *nomeUtilizador) {
+char* pesquisar_nome_ficheiro(Utilizador *listaUtilizadores, const char *nomeUtilizador) {
     Utilizador *atual = listaUtilizadores;
 
     while (atual != NULL) {
         if (strcmp(atual->nome, nomeUtilizador) == 0) {
             
-            char *nomeFicheiroCompleto = (char *) malloc(50 * sizeof(char)); 
+            char *nomeFicheiroCompleto = (char *) malloc(256 * sizeof(char)); 
             if (nomeFicheiroCompleto == NULL) {
                 printf("Erro ao alocar memória para nomeFicheiroCompleto.\n");
                 return NULL;
             }
 
-            // Adiciona a extensão ".txt" ao nome do arquivo se ainda não estiver presente
-            if (strstr(atual->nomeFicheiro, ".txt") == NULL) {
-                sprintf(nomeFicheiroCompleto, "%s.txt", atual->nomeFicheiro);
-            } else {
-                strcpy(nomeFicheiroCompleto, atual->nomeFicheiro);
-            }
+            montar_caminho_ficheiro(atual->nomeFicheiro, nomeFicheiroCompleto, 256);
 
             return nomeFicheiroCompleto;
         }
@@ -202,11 +212,32 @@ void imprimir(Grafo* grafo) {
   
 }
 
+// Calcula o custo de iluminar TODAS as ruas do grafo (grafo direcional, sem divisão)
+int calcularCustoTotalTodasRuas(Grafo *grafo) {
+    int total = 0;
+    for (int count = 0; count < grafo->poste; count++) {
+        Aresta *aux = grafo->prox[count].rotulo;
+        while (aux) {
+            total += aux->distancia * 1600;
+            aux = aux->prox;
+        }
+    }
+    return total;
+}
+
 // Função para adicionar um novo poste ao grafo
 Grafo* adicionar_novo_poste(Grafo *grafo) {
     if (grafo == NULL) {
         printf("Grafo não inicializado.\n");
         return grafo;
+    }
+
+    // Verificar se já existe algum poste sem ligações
+    for (int i = 0; i < grafo->poste; i++) {
+        if (grafo->prox[i].rotulo == NULL) {
+            printf("Já existe o poste %d sem ligações. Não é permitido ter mais de um poste isolado.\n", i + 1);
+            return grafo;
+        }
     }
 
     int numPostes = grafo->poste + 1;
@@ -499,7 +530,7 @@ void uniao_de_postes(GrupoDePostes grupodeposte[], int x, int y) {
 }
 
 // Função para calcular o custo total das arestas iluminadas
-int calcularCustoTotalArestasIluminadas(Grafo *grafo) {
+/*int calcularCustoTotalArestasIluminadas(Grafo *grafo) {
     int total = 0;
     for (int count = 0; count < grafo->poste; count++) {
         Aresta *aux = grafo->prox[count].rotulo;
@@ -509,7 +540,7 @@ int calcularCustoTotalArestasIluminadas(Grafo *grafo) {
         }
     }
     return total / 2; // Cada aresta é contada duas vezes
-}
+}*/
 
 // Função para encontrar a melhor solução de iluminação (MST)
 void melhor_solucao(Grafo *grafo) {
@@ -598,7 +629,10 @@ void melhor_solucao(Grafo *grafo) {
     }
 
     printf("Custo total: %d KZ\n", custoTotal * 1600);
-    printf("Quantidade poupada: %d KZ\n", calcularCustoTotalArestasIluminadas(grafo) - custoTotal * 1600);
+    // Custo de iluminar todas as ruas do grafo
+    int custoTodas = calcularCustoTotalTodasRuas(grafo);
+    printf("Custo de iluminar todas as ruas: %d KZ\n", custoTodas);
+    printf("Quantidade poupada: %d KZ\n", custoTodas - custoTotal * 1600);
 
     free(arestas);
     free(grupodeposte);

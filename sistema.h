@@ -19,7 +19,7 @@ Utilizador* adicionar_utilizador(Utilizador *listaUtilizadores, const char *nome
 int autenticar_utilizador(Utilizador *listaUtilizadores, const char *nome, const char *senha); // check
 Utilizador* remover_utilizador(Utilizador *listaUtilizadores, const char *nome); // check
 void listar_utilizadores(Utilizador *listaUtilizadores); // check
-const char* pesquisar_nome_ficheiro(Utilizador *listaUtilizadores, const char *nomeUtilizador);// check
+char* pesquisar_nome_ficheiro(Utilizador *listaUtilizadores, const char *nomeUtilizador);// check
 
 
 //---------------------------- Estrutura para a Simulação -----------------------------------
@@ -78,11 +78,11 @@ void melhor_solucao(Grafo *grafo);
 int procurar(GrupoDePostes grupodeposte[], int count);
 void uniao_de_postes(GrupoDePostes grupodeposte[], int counter1, int counter2);
 int compare(const void * a, const void* b);
-int calcularCustoTotalArestasIluminadas(Grafo *grafo);
+int calcularCustoTotalTodasRuas(Grafo *grafo);
 
 void imprimir(Grafo* grafo); // check
 void ler_ficheiro(const char *nome_ficheiro, Grafo **grafo, int *numPoste); // check
 
-
+void limpar_buffer();
 
 #endif // SISTEMA_H
