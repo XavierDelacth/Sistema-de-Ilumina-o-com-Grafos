@@ -1,0 +1,15 @@
+# ninja log v5
+2066	9530	7405000175660754	CMakeFiles/sistemaIluminacao.dir/main.c.obj	f802c884e27dc0d3
+9531	12822	7405000209248555	sistemaIluminacao.exe	5f713977a285ae7f
+250	3869	7405435829687977	CMakeFiles/sistemaIluminacao.dir/sistema.c.obj	7f44cc8026a2b5c3
+234	3871	7405435829687977	CMakeFiles/sistemaIluminacao.dir/main.c.obj	f802c884e27dc0d3
+19	158	7405436259948553	CMakeFiles/sistemaIluminacao.dir/main.c.obj	f802c884e27dc0d3
+25	161	7405436259979365	CMakeFiles/sistemaIluminacao.dir/sistema.c.obj	7f44cc8026a2b5c3
+161	302	7405436261323853	sistemaIluminacao.exe	559744c074d23f76
+27	168	7405437064324742	CMakeFiles/sistemaIluminacao.dir/sistema.c.obj	7f44cc8026a2b5c3
+21	173	7405437064355367	CMakeFiles/sistemaIluminacao.dir/main.c.obj	f802c884e27dc0d3
+173	324	7405437065841082	sistemaIluminacao.exe	559744c074d23f76
+29	268	7405460185723243	CMakeFiles/sistemaIluminacao.dir/sistema.c.obj	7f44cc8026a2b5c3
+23	302	7405460186098514	CMakeFiles/sistemaIluminacao.dir/main.c.obj	f802c884e27dc0d3
+20	185	7405460677303383	CMakeFiles/sistemaIluminacao.dir/main.c.obj	f802c884e27dc0d3
+26	186	7405460677595545	CMakeFiles/sistemaIluminacao.dir/sistema.c.obj	7f44cc8026a2b5c3
